@@ -3,7 +3,6 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-let booksArr = Object.entries(books);
 
 
 public_users.post("/register", (req, res) => {
@@ -27,11 +26,18 @@ public_users.get('/isbn/:isbn', function (req, res) {
 
 // Get book details based on author
 public_users.get('/author/:author', function (req, res) {
-    let author = req.params.author;
-    const filteredByAuthor = booksArr.filter((book) => book.author === author);      
-    res.send(filteredByAuthor);
-    
+    const author = req.params.author;
+    let filtered_authors = [];
+    for (let bookId in books) {
+        if (books.hasOwnProperty(bookId)) {
+            let book = books[bookId];
+            if(book.author === author) {
+                filtered_authors.push(book);
+            }
+        }
 
+    }
+    res.send(filtered_authors);
     return res.status(300).json({ message: "Yet to be implemented" });
 });
 
