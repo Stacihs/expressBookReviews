@@ -31,11 +31,10 @@ public_users.get('/author/:author', function (req, res) {
     for (let bookId in books) {
         if (books.hasOwnProperty(bookId)) {
             let book = books[bookId];
-            if(book.author === author) {
+            if (book.author === author) {
                 filtered_authors.push(book);
             }
         }
-
     }
     res.send(filtered_authors);
     return res.status(300).json({ message: "Yet to be implemented" });
@@ -43,7 +42,17 @@ public_users.get('/author/:author', function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
-    //Write your code here
+    const title = req.params.title;
+    let filtered_titles = [];
+    for (let bookId in books) {
+        if (books.hasOwnProperty(bookId)) {
+            let book = books[bookId];
+            if (book.title === title) {
+                filtered_titles.push(book);
+            }
+        }
+    }
+    res.send(filtered_titles);
     return res.status(300).json({ message: "Yet to be implemented" });
 });
 
