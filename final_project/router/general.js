@@ -6,13 +6,18 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-    //Write your code here
-    return res.status(300).json({ message: "Yet to be implemented" });
+    const username = req.query.username;
+    const password = req.query.password;
+
+    users.push({ "username": req.query.username, "password": req.query.password });
+    res.send("The user" + (' ') + (req.query.username) + " has been added!");
+
+    
 });
 
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
-    res.send(JSON.stringify(books));
+    res.send(JSON.stringify(books, null, 4));
     return res.status(300).json({ message: "Yet to be implemented" });
 });
 
