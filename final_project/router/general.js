@@ -6,14 +6,25 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-    const username = req.query.username;
-    const password = req.query.password;
+    let username = req.query.username.trim();
+    let password = req.query.password.trim();
+    let newUser = { "username": username, "password": password };
+    const usernameExists = users.some(function (user) {
+        return user.username === newUser.username;
+    });
+    if (usernameExists) {
+        return res.status(400).send("That username already exists. Choose another one.");
+    } else if(username === ""  && password === "") {
+        return res.status(400).send("Username and password cannot be empty");
+    } else if(username === "" || password === "") {
+        return res.status(400).send("Username or password is empty");
+    } else {
+        users.push(newUser);
+        return res.status(400).send("The user" + (' ') + (newUser.username) + " has been added!");
+    }
 
-    users.push({ "username": req.query.username, "password": req.query.password });
-    res.send("The user" + (' ') + (req.query.username) + " has been added!");
-
-    
 });
+
 
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
