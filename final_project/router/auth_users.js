@@ -14,13 +14,21 @@ const isValid = (username) => {
 const authenticatedUser = (username, password) => {
     users.some(function (user) {
         return ((user.username === username) && (user.password === password));
-    })
+    });
 };
 
 //only registered users can login
 regd_users.post("/login", (req, res) => {
-    const user = req.body.user;
-    return res.status(300).json({ message: "Yet to be implemented" });
+    if (authenticatedUser && isValid) {
+        let accessToken = jwt.sign({
+            data: authenticatedUser
+        }, 'access', { expiresIn: 60 * 60 });
+
+        req.session.authorization = {
+            accessToken
+        }
+        return res.status(200).send("User successfully logged in");
+    };
 });
 
 // Add a book review
