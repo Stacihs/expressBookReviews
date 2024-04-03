@@ -14,10 +14,8 @@ public_users.post("/register", (req, res) => {
     });
     if (usernameExists) {
         return res.status(400).json({ message: "That username already exists. Choose another one." });
-    } else if (username === "" && password === "") {
-        return res.status(400).json({ message: "Username and password cannot be empty" });
     } else if (username === "" || password === "") {
-        return res.status(400).json({ message: "Username or password is empty" });
+        return res.status(400).json({ message: "Username and/or password cannot be empty" });
     } else {
         users.push(newUser);
         return res.status(201).json({ message: "The user" + (' ') + (newUser.username) + " has been added!" });
