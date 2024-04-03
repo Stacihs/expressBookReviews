@@ -6,26 +6,43 @@ const regd_users = express.Router();
 let users = [];
 
 const isValid = (username) => {
-    users.some(function (user) {
+    let sameusername = users.some(function (user) {
         return user.username === username;
-    })
+    });
+    if (sameusername.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 const authenticatedUser = (username, password) => {
-    users.some(function (user) {
+    let validusers = users.filter(function (user) {
         return ((user.username === username) && (user.password === password));
     });
+    if (validusers.length > 0) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 //only registered users can login
 regd_users.post("/login", (req, res) => {
-    if (authenticatedUser && isValid) {
+    const username = req.query.username;
+    const password = req.query.password;
+
+    if (!username || !password) {
+        return res.status(404).json({message: "Username and/or password missing"});
+    }
+
+    if (authenticatedUser(username, password)) {
         let accessToken = jwt.sign({
-            data: authenticatedUser
+            data: password
         }, 'access', { expiresIn: 60 * 60 });
 
         req.session.authorization = {
-            accessToken
+            accessToken, username
         }
         return res.status(200).send("User successfully logged in");
     };
