@@ -33,7 +33,7 @@ regd_users.post("/login", (req, res) => {
     const password = req.query.password;
 
     if (!username || !password) {
-        return res.status(404).json({message: "Username and/or password missing"});
+        return res.status(404).json({ message: "Username and/or password missing" });
     }
 
     if (authenticatedUser(username, password)) {
@@ -50,17 +50,26 @@ regd_users.post("/login", (req, res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    const isbn = parseInt(req.params.isbn);
-    let filtered_reviews = books[isbn].reviews;
-    if(filtered_reviews.length > 0) {
-        let filtered_review = filtered_reviews[0];
-        let review = req.query.review;
-        if(review) {
-            filtered_review.review = review;
+    const isbn = req.params.isbn;
+    const review = req.query.review;
+    const username = req.user.username;
+
+    if (books.hasOwnProperty(isbn)) {
+        const book = books[isbn];
+        if (book.reviews.hasOwnProperty(username)) {
+            book.reviews[username].review = review;
+            return res.status(200).json({ message: "Review modified successfully" });
+        } else {
+            // Add a new review for the user
+            book.reviews[username] = {
+                username: username,
+                review: review,
+            };
+            return res.status(200).json({ message: "Review added successfully" });
         }
+    } else {
+        return res.status(404).json({ message: "Book not found" });
     }
-    filtered_reviews.push(newReview);
-    return res.status(300).json({ message: "Yet to be implemented" });
 });
 
 module.exports.authenticated = regd_users;
