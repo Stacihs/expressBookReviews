@@ -50,7 +50,16 @@ regd_users.post("/login", (req, res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    //Write your code here
+    const isbn = parseInt(req.params.isbn);
+    let filtered_reviews = books[isbn].reviews;
+    if(filtered_reviews.length > 0) {
+        let filtered_review = filtered_reviews[0];
+        let review = req.query.review;
+        if(review) {
+            filtered_review.review = review;
+        }
+    }
+    filtered_reviews.push(newReview);
     return res.status(300).json({ message: "Yet to be implemented" });
 });
 

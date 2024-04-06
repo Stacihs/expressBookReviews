@@ -26,16 +26,15 @@ public_users.post("/register", (req, res) => {
 // Get the book list available in the shop
 public_users.get('/', function (req, res) {
     new Promise((resolve, reject) => {
-        let allBooks = JSON.stringify(books, null, 4);
-        resolve(allBooks);
+        resolve(JSON.stringify(books, null, 4));
     })
-        .then(allBooks => {
-            return res.status(200).json({ message: "Success", allBooks });
-        })
-        .catch(err => {
-            return res.status(500).json({ message: "Error getting books" });
-        })
-
+    .then(jsonString => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(jsonString);
+    })
+    .catch(err => {
+        res.status(500).send(err);
+    });
 });
 
 
