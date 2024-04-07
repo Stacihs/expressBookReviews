@@ -52,7 +52,7 @@ regd_users.post("/login", (req, res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
     const review = req.query.review;
-    const username = req.user.username;
+    const username = req.session.authorization.username;
 
     if (books.hasOwnProperty(isbn)) {
         const book = books[isbn];
@@ -62,7 +62,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         } else {
             // Add a new review for the user
             book.reviews[username] = {
-                username: username,
                 review: review,
             };
             return res.status(200).json({ message: "Review added successfully" });
@@ -71,6 +70,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         return res.status(404).json({ message: "Book not found" });
     }
 });
+
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;

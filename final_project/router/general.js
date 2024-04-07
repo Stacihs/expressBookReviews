@@ -6,8 +6,8 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-    const username = req.query.username.trim();
-    const password = req.query.password.trim();
+    const username = req.query.username;
+    const password = req.query.password;
     const newUser = { "username": username, "password": password };
     const usernameExists = users.some(function (user) {
         return user.username === newUser.username;
